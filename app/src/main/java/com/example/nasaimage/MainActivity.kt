@@ -44,7 +44,9 @@ fun AstronomyImageList() {
 
     LaunchedEffect(true) {
         val apiKey = "oOUSTZGFdvatm1MEf8NG0Wvo3T38GUcI8vul3lrl"
-        val url = "https://api.nasa.gov/planetary/apod?api_key=$apiKey&count=5"
+        var start_date = "2013-05-20"
+        var end_date = "2013-06-24"
+        val url = "https://api.nasa.gov/planetary/apod?api_key=$apiKey&start_date=$start_date&end_date=$end_date"
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -60,14 +62,22 @@ fun AstronomyImageList() {
             val jsonArray = JSONArray(responseData)
 
             val newImages = mutableListOf<NASAImage>()
-            for (i in 0 until jsonArray.length()) {
+
+            // Start iterating from the end of the array and move backwards
+            for (i in jsonArray.length() - 1 downTo 0) {
                 val jsonObject = jsonArray.getJSONObject(i)
                 val title = jsonObject.getString("title")
                 val imageUrl = jsonObject.getString("url")
                 newImages.add(NASAImage(title, imageUrl))
+
+                // Stop iterating if we have collected 5 images
+                if (newImages.size == 5) {
+                    break
+                }
             }
 
-            images = newImages.toList()
+            // Reverse the list to maintain the correct order (from latest to oldest)
+            images = newImages.reversed()
         } else {
             // Handle error
         }
@@ -94,6 +104,11 @@ fun ImageListItem(image: NASAImage, context: Context) {
                 context.startActivity(intent)
             }
     ) {
+        Text(
+            text = "Filter by Date : 2013-05-20 - 2013-06-24",
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(bottom = 100.dp)
+        )
         Text(
             text = "Title: ${image.title}",
             style = MaterialTheme.typography.h6,
