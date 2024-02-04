@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -40,8 +42,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-data class NASAImage(val title: String, val url: String)
-
+@Parcelize
+data class NASAImage(val title: String, val url: String) : Parcelable
 @Composable
 fun AstronomyImageList() {
     var images by rememberSaveable { mutableStateOf<List<NASAImage>>(emptyList()) }
