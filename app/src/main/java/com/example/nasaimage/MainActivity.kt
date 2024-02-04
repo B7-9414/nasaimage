@@ -25,6 +25,7 @@ import okhttp3.Request
 import org.json.JSONArray
 import androidx.compose.ui.Alignment
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.saveable.rememberSaveable
 
 
 class MainActivity : ComponentActivity() {
@@ -43,8 +44,8 @@ data class NASAImage(val title: String, val url: String)
 
 @Composable
 fun AstronomyImageList() {
-    var images by remember { mutableStateOf<List<NASAImage>>(emptyList()) }
-    var loading by remember { mutableStateOf(true) }
+    var images by rememberSaveable { mutableStateOf<List<NASAImage>>(emptyList()) }
+    var loading by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(true) {
         fetchLatestImages { newImages ->
@@ -64,8 +65,10 @@ fun AstronomyImageList() {
 @Composable
 fun DisplayImageList(images: List<NASAImage>) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(30.dp)
     ) {
         Text(
             text = "Filter by Date : 2013-05-20 - 2013-06-24",
@@ -102,7 +105,7 @@ fun ImageListItem(image: NASAImage, context: Context) {
         )
         Text(
             text = "URL: ${image.url}",
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.overline,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         NetworkImage(
