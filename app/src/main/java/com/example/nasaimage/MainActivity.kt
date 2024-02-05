@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
 }
 @Parcelize
 data class NASAImage(val title: String, val url: String) : Parcelable
+
 @Composable
 fun AstronomyImageList() {
     var images by rememberSaveable { mutableStateOf<List<NASAImage>>(emptyList()) }
